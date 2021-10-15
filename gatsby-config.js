@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    siteUrl: "https://www.yourdomain.tld",
+    siteUrl: "https://www.ennathinna.com",
     title: "what to cook",
   },
   plugins: [
@@ -11,5 +11,14 @@ module.exports = {
         trackingId: "289914215",
       },
     },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `data`,
+        path: `${__dirname}/src/data/`,
+      },
+    },
+    `gatsby-transformer-csv`,
+    `gatsby-plugin-material-ui`
   ],
 };
