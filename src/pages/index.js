@@ -1,9 +1,12 @@
 import { graphql } from "gatsby";
 import React from "react";
-import Container from "@mui/material/Container";
+import "./styles.css";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 
 export default function WhatToCook({ data }) {
   const foodData = data.allFoodCsv.nodes;
@@ -11,19 +14,72 @@ export default function WhatToCook({ data }) {
   const [currentFood, setCurrentFood] = React.useState(
     foodData[random].TranslatedRecipeName
   );
+  const font = "'Bebas Neue', cursive";
+  const theme = createTheme({
+    typography: {
+      fontFamily: font,
+    },
+  });
   return (
-    <Container maxWidth="sm">
-      <Box>
-        <Typography variant="h4" component="h1" gutterBottom>
-          {currentFood}
-        </Typography>
-        <Button
-          onClick={() => setCurrentFood(foodData[random].TranslatedRecipeName)}
-        >
-          Change
-        </Button>
-      </Box>
-    </Container>
+    <ThemeProvider theme={theme}>
+      <Container maxWidth="lg">
+        <Box mt={20}>
+          <Grid
+            container
+            spacing={8}
+            direction="column"
+            alignItems="center"
+            alignContent="center"
+          >
+            <Grid item xs={12}>
+              <Typography variant="h4">{currentFood}</Typography>
+            </Grid>
+            <Grid item xs={4} alignItems="center" justifyContent="center">
+              <Button
+                variant="contained"
+                color="success"
+                onClick={() =>
+                  window.open(
+                    `https://www.google.com/search?q=${currentFood}+recipe`,
+                    "_blank"
+                  )
+                }
+              >
+                I want to make this
+              </Button>
+            </Grid>
+            <Grid item xs={4} alignItems="center" justifyContent="center">
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() =>
+                  setCurrentFood(
+                    foodData[Math.floor(Math.random() * foodData.length)]
+                      .TranslatedRecipeName
+                  )
+                }
+              >
+                I don't like it
+              </Button>
+            </Grid>
+            {/* <Grid item xs={4} alignItems="center" justifyContent="center">
+              <Button
+                variant="contained"
+                color="warning"
+                onClick={() =>
+                  setCurrentFood(
+                    foodData[Math.floor(Math.random() * foodData.length)]
+                      .TranslatedRecipeName
+                  )
+                }
+              >
+                I don't eat meat
+              </Button>
+            </Grid> */}
+          </Grid>
+        </Box>
+      </Container>
+    </ThemeProvider>
   );
 }
 
