@@ -1,7 +1,12 @@
 module.exports = {
   siteMetadata: {
     siteUrl: "https://www.ennathinna.com",
-    title: "what to cook",
+    title: "Enna Thinna",
+    titleTemplate: "%s · What to cook | Indian recipe ideas",
+    description:
+      "When you just want someone to tell you what to cook, Enna thinna gives you no nonsense ideas to cook any Indian dishes.",
+    image: "/src/images/logo.svg", // Path to your image you placed in the 'static' folder
+    twitterUsername: "@_ajayv",
   },
   plugins: [
     "gatsby-plugin-gatsby-cloud",
@@ -19,6 +24,7 @@ module.exports = {
       },
     },
     `gatsby-transformer-csv`,
-    `gatsby-plugin-material-ui`
+    `gatsby-plugin-material-ui`,
+    `gatsby-plugin-react-helmet`,
   ],
 };

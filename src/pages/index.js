@@ -7,13 +7,18 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import SEO from "./seo";
 
 export default function WhatToCook({ data }) {
   const [allFood, setAllFood] = React.useState([]);
+  const [vegFood, setVegFood] = React.useState([]);
   const [currentFood, setCurrentFood] = React.useState("");
+  const [veg, setVeg] = React.useState(false);
   React.useEffect(() => {
     const foodData = data.allFoodCsv.nodes;
+    const vegFoodData = foodData.filter((food) => food.meat === "FALSE");
     setAllFood(foodData);
+    setVegFood(vegFoodData);
     setCurrentFood(foodData[Math.floor(Math.random() * foodData.length)].name);
   }, [data]);
   const font = "'Bebas Neue', cursive";
@@ -22,8 +27,21 @@ export default function WhatToCook({ data }) {
       fontFamily: font,
     },
   });
+  const changeFood = () => {
+    const food = veg ? vegFood : allFood;
+    setCurrentFood(food[Math.floor(Math.random() * food.length)].name);
+  };
+  const filterVeg = () => {
+    setVeg(true);
+    setCurrentFood(vegFood[Math.floor(Math.random() * vegFood.length)].name);
+  };
+  const filterMeat = () => {
+    setVeg(false);
+    setCurrentFood(allFood[Math.floor(Math.random() * allFood.length)].name);
+  };
   return (
     <ThemeProvider theme={theme}>
+      <SEO />
       <Container maxWidth="lg">
         <Box mt={20}>
           <Grid
@@ -51,35 +69,27 @@ export default function WhatToCook({ data }) {
               </Button>
             </Grid>
             <Grid item xs={4} alignItems="center" justifyContent="center">
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() =>
-                  setCurrentFood(
-                    allFood[Math.floor(Math.random() * allFood.length)].name
-                  )
-                }
-              >
+              <Button variant="contained" color="error" onClick={changeFood}>
                 I don't like it
               </Button>
             </Grid>
-            <Grid item xs={4} alignItems="center" justifyContent="center">
-              <Button
-                variant="contained"
-                color="warning"
-                onClick={() => {
-                  const vegFood = allFood.filter(
-                    (food) => food.meat === "false"
-                  );
-                  setAllFood(vegFood);
-                  setCurrentFood(
-                    vegFood[Math.floor(Math.random() * vegFood.length)].name
-                  );
-                }}
-              >
-                I don't eat meat
-              </Button>
-            </Grid>
+            {veg ? (
+              <Grid item xs={4} alignItems="center" justifyContent="center">
+                <Button
+                  variant="contained"
+                  color="warning"
+                  onClick={filterMeat}
+                >
+                  I eat meat
+                </Button>
+              </Grid>
+            ) : (
+              <Grid item xs={4} alignItems="center" justifyContent="center">
+                <Button variant="contained" color="warning" onClick={filterVeg}>
+                  I don't eat meat
+                </Button>
+              </Grid>
+            )}
           </Grid>
         </Box>
       </Container>
