@@ -9,11 +9,13 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 
 export default function WhatToCook({ data }) {
-  const foodData = data.allFoodCsv.nodes;
-  const random = Math.floor(Math.random() * foodData.length);
-  const [currentFood, setCurrentFood] = React.useState(
-    foodData[random].TranslatedRecipeName
-  );
+  const [allFood, setAllFood] = React.useState([]);
+  const [currentFood, setCurrentFood] = React.useState("");
+  React.useEffect(() => {
+    const foodData = data.allFoodCsv.nodes;
+    setAllFood(foodData);
+    setCurrentFood(foodData[Math.floor(Math.random() * foodData.length)].name);
+  }, [data]);
   const font = "'Bebas Neue', cursive";
   const theme = createTheme({
     typography: {
@@ -54,28 +56,30 @@ export default function WhatToCook({ data }) {
                 color="error"
                 onClick={() =>
                   setCurrentFood(
-                    foodData[Math.floor(Math.random() * foodData.length)]
-                      .TranslatedRecipeName
+                    allFood[Math.floor(Math.random() * allFood.length)].name
                   )
                 }
               >
                 I don't like it
               </Button>
             </Grid>
-            {/* <Grid item xs={4} alignItems="center" justifyContent="center">
+            <Grid item xs={4} alignItems="center" justifyContent="center">
               <Button
                 variant="contained"
                 color="warning"
-                onClick={() =>
+                onClick={() => {
+                  const vegFood = allFood.filter(
+                    (food) => food.meat === "false"
+                  );
+                  setAllFood(vegFood);
                   setCurrentFood(
-                    foodData[Math.floor(Math.random() * foodData.length)]
-                      .TranslatedRecipeName
-                  )
-                }
+                    vegFood[Math.floor(Math.random() * vegFood.length)].name
+                  );
+                }}
               >
                 I don't eat meat
               </Button>
-            </Grid> */}
+            </Grid>
           </Grid>
         </Box>
       </Container>
@@ -87,8 +91,8 @@ export const IndexQuery = graphql`
   query {
     allFoodCsv {
       nodes {
-        TranslatedRecipeName
-        Diet
+        name
+        meat
       }
     }
   }
