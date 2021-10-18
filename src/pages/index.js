@@ -52,7 +52,9 @@ export default function WhatToCook({ data }) {
             alignContent="center"
           >
             <Grid item xs={12}>
-              <Typography variant="h4">{currentFood}</Typography>
+              <Typography textAlign="center" variant="h4">
+                {currentFood}
+              </Typography>
             </Grid>
             <Grid item xs={4} alignItems="center" justifyContent="center">
               <Button
