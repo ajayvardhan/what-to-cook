@@ -1,10 +1,10 @@
 # Enna Thinna
 
-What to cool | Indian recipe ideas
+What to cook | Indian recipe ideas
 
 ## Description
 
-When you just want someone to tell you what to cook, Enna thinna gives you no nonsense ideas to cook any Indian dishes
+When you just want someone to tell you what to cook, Enna thinna gives you no-nonsense ideas to cook any Indian dishes
 
 ### Dependencies
 
