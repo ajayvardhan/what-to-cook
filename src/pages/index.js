@@ -7,19 +7,27 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import Switch from "@mui/material/Switch";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import SEO from "./seo";
 
 export default function WhatToCook({ data }) {
   const [allFood, setAllFood] = React.useState([]);
   const [vegFood, setVegFood] = React.useState([]);
+  const [meatFood, setMeatFood] = React.useState([]);
   const [currentFood, setCurrentFood] = React.useState("");
-  const [veg, setVeg] = React.useState(false);
+  const [veg, setVeg] = React.useState(true);
   React.useEffect(() => {
     const foodData = data.allFoodCsv.nodes;
     const vegFoodData = foodData.filter((food) => food.meat === "FALSE");
+    const meatFoodData = foodData.filter((food) => food.meat === "TRUE");
     setAllFood(foodData);
     setVegFood(vegFoodData);
-    setCurrentFood(foodData[Math.floor(Math.random() * foodData.length)].name);
+    setMeatFood(meatFoodData);
+    setCurrentFood(
+      vegFoodData[Math.floor(Math.random() * vegFoodData.length)].name
+    );
   }, [data]);
   const font = "'Bebas Neue', cursive";
   const theme = createTheme({
@@ -27,8 +35,8 @@ export default function WhatToCook({ data }) {
       fontFamily: font,
     },
   });
-  const changeFood = () => {
-    const food = veg ? vegFood : allFood;
+  const changeFood = (isVeg) => {
+    const food = isVeg ? vegFood : meatFood;
     setCurrentFood(food[Math.floor(Math.random() * food.length)].name);
   };
   const filterVeg = () => {
@@ -71,27 +79,32 @@ export default function WhatToCook({ data }) {
               </Button>
             </Grid>
             <Grid item xs={4} alignItems="center" justifyContent="center">
-              <Button variant="contained" color="error" onClick={changeFood}>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => changeFood(veg)}
+              >
                 I don't like it
               </Button>
             </Grid>
-            {veg ? (
-              <Grid item xs={4} alignItems="center" justifyContent="center">
-                <Button
-                  variant="contained"
-                  color="warning"
-                  onClick={filterMeat}
-                >
-                  I eat meat
-                </Button>
-              </Grid>
-            ) : (
-              <Grid item xs={4} alignItems="center" justifyContent="center">
-                <Button variant="contained" color="warning" onClick={filterVeg}>
-                  I don't eat meat
-                </Button>
-              </Grid>
-            )}
+            <Grid item xs={12}>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      color="success"
+                      checked={veg}
+                      onChange={() => {
+                        setVeg(!veg);
+                        changeFood(!veg);
+                      }}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                  }
+                  label="Veg"
+                />
+              </FormGroup>
+            </Grid>
           </Grid>
         </Box>
       </Container>
