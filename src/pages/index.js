@@ -39,14 +39,6 @@ export default function WhatToCook({ data }) {
     const food = isVeg ? vegFood : meatFood;
     setCurrentFood(food[Math.floor(Math.random() * food.length)].name);
   };
-  const filterVeg = () => {
-    setVeg(true);
-    setCurrentFood(vegFood[Math.floor(Math.random() * vegFood.length)].name);
-  };
-  const filterMeat = () => {
-    setVeg(false);
-    setCurrentFood(allFood[Math.floor(Math.random() * allFood.length)].name);
-  };
   return (
     <ThemeProvider theme={theme}>
       <SEO />
