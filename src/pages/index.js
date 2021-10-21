@@ -2,7 +2,6 @@ import { graphql } from "gatsby";
 import React from "react";
 import "./styles.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
@@ -13,7 +12,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import SEO from "./seo";
 
 export default function WhatToCook({ data }) {
-  const [allFood, setAllFood] = React.useState([]);
   const [vegFood, setVegFood] = React.useState([]);
   const [meatFood, setMeatFood] = React.useState([]);
   const [currentFood, setCurrentFood] = React.useState("");
@@ -22,7 +20,6 @@ export default function WhatToCook({ data }) {
     const foodData = data.allFoodCsv.nodes;
     const vegFoodData = foodData.filter((food) => food.meat === "FALSE");
     const meatFoodData = foodData.filter((food) => food.meat === "TRUE");
-    setAllFood(foodData);
     setVegFood(vegFoodData);
     setMeatFood(meatFoodData);
     setCurrentFood(
@@ -31,9 +28,15 @@ export default function WhatToCook({ data }) {
   }, [data]);
   const font = "'Bebas Neue', cursive";
   const theme = createTheme({
+    // palette: {
+    //   mode: "dark",
+    // },
     typography: {
       fontFamily: font,
     },
+    // body: {
+    //   backgroundColor: "black",
+    // },
   });
   const changeFood = (isVeg) => {
     const food = isVeg ? vegFood : meatFood;
@@ -44,19 +47,18 @@ export default function WhatToCook({ data }) {
       <SEO />
       <Container maxWidth="lg">
         <Box mt={20}>
-          <Grid
-            container
-            spacing={8}
-            direction="column"
-            alignItems="center"
-            alignContent="center"
+          <Box justifyContent="center" height={150}>
+            <Typography textAlign="center" variant="h4">
+              {currentFood}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
           >
-            <Grid item xs={12}>
-              <Typography textAlign="center" variant="h4">
-                {currentFood}
-              </Typography>
-            </Grid>
-            <Grid item xs={4} alignItems="center" justifyContent="center">
+            <Box sx={{ p: 2 }}>
               <Button
                 variant="contained"
                 color="success"
@@ -69,8 +71,8 @@ export default function WhatToCook({ data }) {
               >
                 I want to make this
               </Button>
-            </Grid>
-            <Grid item xs={4} alignItems="center" justifyContent="center">
+            </Box>
+            <Box sx={{ p: 2 }}>
               <Button
                 variant="contained"
                 color="error"
@@ -78,26 +80,33 @@ export default function WhatToCook({ data }) {
               >
                 I don't like it
               </Button>
-            </Grid>
-            <Grid item xs={12}>
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      color="success"
-                      checked={veg}
-                      onChange={() => {
-                        setVeg(!veg);
-                        changeFood(!veg);
-                      }}
-                      inputProps={{ "aria-label": "controlled" }}
-                    />
-                  }
-                  label="Veg"
-                />
-              </FormGroup>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch
+                    color="success"
+                    checked={veg}
+                    onChange={() => {
+                      setVeg(!veg);
+                      changeFood(!veg);
+                    }}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                }
+                label="Veg"
+                // sx={{ color: "white" }}
+              />
+            </FormGroup>
+          </Box>
         </Box>
       </Container>
     </ThemeProvider>
