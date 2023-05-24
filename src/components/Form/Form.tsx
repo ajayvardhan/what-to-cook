@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ReactGA from "react-ga";
 import {
   TextField,
   Button,
@@ -18,6 +19,8 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { postFormData } from "../../api/api";
+
+ReactGA.initialize("G-TT6N74JHVL");
 
 const popularCuisines = [
   "Italian",
@@ -104,6 +107,12 @@ const Form: React.FC = () => {
         dietType,
       });
       setApiResponse(response.data);
+      ReactGA.event({
+        category: "Food",
+        action: "response",
+        label: "Search Dish",
+        dimension1: response.data,
+      });
     } catch (error) {
       console.error("API error:", error);
     } finally {
@@ -113,6 +122,11 @@ const Form: React.FC = () => {
 
   const handleFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    ReactGA.event({
+      category: "Form",
+      action: "Submit",
+      label: "Search Dish",
+    });
     try {
       await getDish();
     } catch (error) {
@@ -121,6 +135,8 @@ const Form: React.FC = () => {
   };
 
   useEffect(() => {
+    ReactGA.pageview(window.location.pathname + window.location.search);
+
     // Call the API with the assigned random values
     (async () => {
       try {
@@ -132,14 +148,31 @@ const Form: React.FC = () => {
   }, []);
 
   const handleDietTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    ReactGA.event({
+      category: "Input",
+      action: "change",
+      label: "Diet Type",
+      dimension1: event.target.value,
+    });
     setDietType(event.target.value);
   };
 
   const handleDislike = async () => {
+    ReactGA.event({
+      category: "Food",
+      action: "dislike",
+      label: "Change Food",
+    });
     await getDish();
   };
 
   const handleRecipeSearch = () => {
+    ReactGA.event({
+      category: "Food",
+      action: "search",
+      label: "Search Food",
+      dimension1: apiResponse,
+    });
     const searchUrl = `https://www.google.com/search?q=${apiResponse}+recipe`;
     window.open(searchUrl, "_blank");
   };
@@ -167,7 +200,15 @@ const Form: React.FC = () => {
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Autocomplete
             options={popularCuisines}
-            onChange={(event, value) => setCuisine(value)}
+            onChange={(event, value) => {
+              ReactGA.event({
+                category: "Input",
+                action: "change",
+                label: "Cuisine",
+                dimension1: value as string,
+              });
+              setCuisine(value);
+            }}
             defaultValue={cuisine}
             renderInput={(params) => (
               <TextField
@@ -184,7 +225,15 @@ const Form: React.FC = () => {
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Autocomplete
             options={commonCookingTimes}
-            onChange={(event, value) => setCookingTime(value)}
+            onChange={(event, value) => {
+              ReactGA.event({
+                category: "Input",
+                action: "change",
+                label: "Cooking Time",
+                dimension1: value as string,
+              });
+              setCookingTime(value);
+            }}
             defaultValue={cookingTime}
             renderInput={(params) => (
               <TextField
@@ -201,7 +250,15 @@ const Form: React.FC = () => {
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Autocomplete
             options={mealTypes}
-            onChange={(event, value) => setMealType(value)}
+            onChange={(event, value) => {
+              ReactGA.event({
+                category: "Input",
+                action: "change",
+                label: "Meal Type",
+                dimension1: value as string,
+              });
+              setMealType(value);
+            }}
             defaultValue={mealType}
             renderInput={(params) => (
               <TextField
@@ -250,7 +307,7 @@ const Form: React.FC = () => {
           <Grid item xs={12} sm={10} md={8} lg={6} xl={4}>
             <Card
               variant="outlined"
-              sx={{ bgcolor: "#adadad", cursor: "pointer" }}
+              sx={{ bgcolor: "#ffffff", cursor: "pointer" }}
             >
               <CardContent>
                 {isLoading ? (
