@@ -106,13 +106,15 @@ const Form: React.FC = () => {
         mealType,
         dietType,
       });
-      const dish = response.data.replace(/[^a-zA-Z0-9 ]/g, "");
-      setApiResponse(dish);
+      const food = response.data.replace(/[^a-zA-Z0-9 ]/g, "");
+      setApiResponse(food);
+      // @ts-ignore
+      window.heap.track("searchFoodResponse", { food });
       ReactGA.event({
         category: "Food",
         action: "response",
         label: "Search Dish",
-        dimension1: dish,
+        dimension1: food,
       });
     } catch (error) {
       console.error("API error:", error);
@@ -123,6 +125,8 @@ const Form: React.FC = () => {
 
   const handleFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    // @ts-ignore
+    window.heap.track("searchFoodSubmit", { food });
     ReactGA.event({
       category: "Form",
       action: "Submit",
@@ -137,6 +141,8 @@ const Form: React.FC = () => {
 
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search);
+    // @ts-ignore
+    window.heap.track("viewPage", { location: window.location.pathname });
 
     // Call the API with the assigned random values
     (async () => {
@@ -149,6 +155,8 @@ const Form: React.FC = () => {
   }, []);
 
   const handleDietTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // @ts-ignore
+    window.heap.track("changeDietType", { dietType: event.target.value });
     ReactGA.event({
       category: "Input",
       action: "change",
@@ -159,6 +167,8 @@ const Form: React.FC = () => {
   };
 
   const handleDislike = async () => {
+    // @ts-ignore
+    window.heap.track("changeFood", { food: apiResponse });
     ReactGA.event({
       category: "Food",
       action: "dislike",
@@ -168,6 +178,8 @@ const Form: React.FC = () => {
   };
 
   const handleRecipeSearch = () => {
+    // @ts-ignore
+    window.heap.track("searchFoodRecipe", { food: apiResponse });
     ReactGA.event({
       category: "Food",
       action: "search",
@@ -202,6 +214,8 @@ const Form: React.FC = () => {
           <Autocomplete
             options={popularCuisines}
             onChange={(event, value) => {
+              // @ts-ignore
+              window.heap.track("changeCuisine", { cuisine: value });
               ReactGA.event({
                 category: "Input",
                 action: "change",
@@ -227,6 +241,8 @@ const Form: React.FC = () => {
           <Autocomplete
             options={commonCookingTimes}
             onChange={(event, value) => {
+              // @ts-ignore
+              window.heap.track("changeCookingTime", { cookingTime: value });
               ReactGA.event({
                 category: "Input",
                 action: "change",
@@ -252,6 +268,8 @@ const Form: React.FC = () => {
           <Autocomplete
             options={mealTypes}
             onChange={(event, value) => {
+              // @ts-ignore
+              window.heap.track("changeMealType", { mealType: value });
               ReactGA.event({
                 category: "Input",
                 action: "change",
