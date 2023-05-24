@@ -1,10 +1,10 @@
 import React from "react";
-import FormComponent from "./FormComponent";
+import Form from "./components/Form/Form";
 
 const App: React.FC = () => {
   return (
     <div>
-      <FormComponent />
+      <Form />
     </div>
   );
 };
