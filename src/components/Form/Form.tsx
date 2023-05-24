@@ -106,12 +106,13 @@ const Form: React.FC = () => {
         mealType,
         dietType,
       });
-      setApiResponse(response.data);
+      const dish = response.data.replace(/[^a-zA-Z0-9 ]/g, "");
+      setApiResponse(dish);
       ReactGA.event({
         category: "Food",
         action: "response",
         label: "Search Dish",
-        dimension1: response.data,
+        dimension1: dish,
       });
     } catch (error) {
       console.error("API error:", error);
