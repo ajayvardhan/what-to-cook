@@ -6,10 +6,12 @@ export const postFormData = async ({
     cuisine,
     cookingTime,
     mealType,
+    dietType
 }: {
     cuisine: string | null;
     cookingTime: string | null;
     mealType: string | null;
+    dietType: string | null;
 }) => {
     const headers = {
         "Content-Type": "application/json",
@@ -19,6 +21,7 @@ export const postFormData = async ({
         cuisine: cuisine || "",
         cookingTime: cookingTime || "",
         mealType: mealType || "",
+        dietType: dietType || ""
     };
 
     return await axios.post(API_URL, body, { headers });

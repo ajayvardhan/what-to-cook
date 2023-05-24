@@ -15,6 +15,7 @@ import {
   Card,
   CardContent,
   CardActions,
+  CircularProgress,
 } from "@mui/material";
 import { postFormData } from "../../api/api";
 
@@ -71,7 +72,7 @@ const theme = createTheme({
       default: "#000000",
     },
     primary: {
-      main: "#28a113",
+      main: "#0c8235",
     },
   },
   typography: {
@@ -91,10 +92,23 @@ const Form: React.FC = () => {
   );
   const [dietType, setDietType] = useState<string>("vegetarian");
   const [apiResponse, setApiResponse] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getDish = async () => {
-    const response = await postFormData({ cuisine, cookingTime, mealType });
-    setApiResponse(response.data);
+    setIsLoading(true);
+    try {
+      const response = await postFormData({
+        cuisine,
+        cookingTime,
+        mealType,
+        dietType,
+      });
+      setApiResponse(response.data);
+    } catch (error) {
+      console.error("API error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleFormSubmit = async (event: React.FormEvent) => {
@@ -236,27 +250,33 @@ const Form: React.FC = () => {
           <Grid item xs={4}>
             <Card
               variant="outlined"
-              sx={{ bgcolor: "#f5f5f5", cursor: "pointer" }}
+              sx={{ bgcolor: "#adadad", cursor: "pointer" }}
             >
               <CardContent>
-                <Typography
-                  align="center"
-                  fontWeight="bold"
-                  color={"#000000"}
-                  fontSize={48}
-                >
-                  {apiResponse}
-                </Typography>
+                {isLoading ? (
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <CircularProgress color="primary" />
+                  </div>
+                ) : (
+                  <Typography
+                    align="center"
+                    fontWeight="bold"
+                    color={"#000000"}
+                    fontSize={48}
+                  >
+                    {apiResponse}
+                  </Typography>
+                )}
               </CardContent>
               <CardActions>
                 <Grid container justifyContent="center" spacing={2}>
                   <Grid item>
-                    <Button variant="outlined" onClick={handleRecipeSearch}>
+                    <Button variant="contained" onClick={handleRecipeSearch}>
                       🙌🏽
                     </Button>
                   </Grid>
                   <Grid item>
-                    <Button variant="outlined" onClick={handleDislike}>
+                    <Button variant="contained" onClick={handleDislike}>
                       ❌
                     </Button>
                   </Grid>
