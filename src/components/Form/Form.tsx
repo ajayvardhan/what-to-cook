@@ -164,7 +164,7 @@ const Form: React.FC = () => {
             Enna Thinna
           </Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
           <Autocomplete
             options={popularCuisines}
             onChange={(event, value) => setCuisine(value)}
@@ -181,7 +181,7 @@ const Form: React.FC = () => {
             )}
           />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
           <Autocomplete
             options={commonCookingTimes}
             onChange={(event, value) => setCookingTime(value)}
@@ -198,7 +198,7 @@ const Form: React.FC = () => {
             )}
           />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
           <Autocomplete
             options={mealTypes}
             onChange={(event, value) => setMealType(value)}
@@ -247,7 +247,7 @@ const Form: React.FC = () => {
           </Button>
         </Grid>
         {apiResponse && (
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={10} md={8} lg={6} xl={4}>
             <Card
               variant="outlined"
               sx={{ bgcolor: "#adadad", cursor: "pointer" }}
