@@ -286,6 +286,11 @@ const Form: React.FC = () => {
           </Grid>
         )}
       </Grid>
+      <Grid container justifyContent="center" alignItems="center">
+        <Grid item>
+          <Typography align="center">Powered by OpenAI</Typography>
+        </Grid>
+      </Grid>
     </ThemeProvider>
   );
 };
