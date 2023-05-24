@@ -126,7 +126,7 @@ const Form: React.FC = () => {
   const handleFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     // @ts-ignore
-    window.heap.track("searchFoodSubmit", { food });
+    window.heap.track("searchFoodSubmit");
     ReactGA.event({
       category: "Form",
       action: "Submit",
