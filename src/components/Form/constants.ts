@@ -1,5 +1,6 @@
 
 export const popularCuisines = [
+    "Tamil",
     "Italian",
     "French",
     "Chinese",
