@@ -1,6 +1,5 @@
 import axios from "axios";
 
-const API_URL = "https://ennathinna.ue.r.appspot.com";
 
 export const postFormData = async ({
     cuisine,
@@ -25,9 +24,10 @@ export const postFormData = async ({
     fat: string | null;
     dietType: string | null;
 }) => {
+    const API_URL = process.env.REACT_APP_API_URL as string;
     const headers = {
         "Content-Type": "application/json",
-        "x-api-key": "ennathinna",
+        "x-api-key": process.env.REACT_APP_API_KEY,
     };
     const body = {
         cuisine: cuisine || "",
