@@ -12,6 +12,7 @@ export const postFormData = async ({
     carbohydrate,
     fat,
     dietType,
+    availableIngredients,
 }: {
     cuisine: string | null;
     cookingTime: string | null;
@@ -23,6 +24,7 @@ export const postFormData = async ({
     carbohydrate: string | null;
     fat: string | null;
     dietType: string | null;
+    availableIngredients: string | null,
 }) => {
     const API_URL = process.env.REACT_APP_API_URL as string;
     const headers = {
@@ -40,8 +42,21 @@ export const postFormData = async ({
         carbohydrate: carbohydrate || "",
         fat: fat || "",
         dietType: dietType || "",
+        availableIngredients: availableIngredients || "",
     };
 
     return await axios.post(API_URL, body, { headers });
+};
+
+
+export const getRecipe = async (dish: string) => {
+    const API_URL = process.env.REACT_APP_API_URL as string;
+    const headers = {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.REACT_APP_API_KEY,
+    };
+    const body = { dish };
+
+    return await axios.post(`${API_URL}/recipe`, body, { headers });
 };
 

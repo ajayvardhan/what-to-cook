@@ -51,11 +51,9 @@ export const dietaryRestrictions = [
     "Dairy-Free",
     "Nut-Free",
     "Vegan",
-    "Vegetarian",
     "Pescatarian",
     "Keto",
     "Paleo",
-    "Low-FODMAP"
 ];
 
 export const flavorProfiles = [
@@ -63,11 +61,9 @@ export const flavorProfiles = [
     "Sweet",
     "Sour",
     "Savory",
-    "Mild",
     "Bitter",
     "Umami",
     "Tangy",
-    "Herbaceous"
 ];
 
 export const allergies = [
