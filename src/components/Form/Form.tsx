@@ -403,7 +403,7 @@ const Form: React.FC = () => {
               <TextField
                 label="Available Ingredients"
                 variant="outlined"
-                sx={{ width: "50%" }}
+                sx={{ width: "75%" }}
                 size="small"
                 helperText="Comma separated list of available ingredients"
                 value={availableIngredients}
