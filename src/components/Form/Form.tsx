@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ReactGA from "react-ga";
 import {
   TextField,
@@ -89,60 +89,47 @@ const Form: React.FC = () => {
   const [isRecipeLoading, setIsRecipeLoading] = useState<boolean>(false);
   const [advancedFiltersExpanded, setAdvancedFiltersExpanded] =
     React.useState(false);
-  const getDish = async () => {
+  const getDish = useCallback(async () => {
     setIsLoading(true);
 
-    let values: {
-      cuisine: string | null;
-      cookingTime: string | null;
-      mealType: string | null;
-      dietaryRestriction: string | null;
-      flavorProfile: string | null;
-      allergy: string | null;
-      protein: string | null;
-      carbohydrate: string | null;
-      fat: string | null;
-      dietType: string | null;
-      availableIngredients: string | null;
-    };
+    const values = advancedFiltersExpanded
+      ? {
+          cuisine,
+          cookingTime,
+          mealType,
+          dietaryRestriction,
+          flavorProfile,
+          allergy,
+          protein,
+          carbohydrate,
+          fat,
+          dietType,
+          availableIngredients,
+        }
+      : {
+          cuisine,
+          cookingTime,
+          mealType,
+          dietaryRestriction: null,
+          flavorProfile: null,
+          allergy: null,
+          protein: null,
+          carbohydrate: null,
+          fat: null,
+          dietType,
+          availableIngredients: null,
+        };
 
-    if (advancedFiltersExpanded) {
-      values = {
-        cuisine,
-        cookingTime,
-        mealType,
-        dietaryRestriction,
-        flavorProfile,
-        allergy,
-        protein,
-        carbohydrate,
-        fat,
-        dietType,
-        availableIngredients,
-      };
-    } else {
-      values = {
-        cuisine,
-        cookingTime,
-        mealType,
-        dietaryRestriction: null,
-        flavorProfile: null,
-        allergy: null,
-        protein: null,
-        carbohydrate: null,
-        fat: null,
-        dietType,
-        availableIngredients: null,
-      };
-    }
     setshowDishContainer(true);
     setIsLoading(true);
     try {
       const response = await postFormData(values);
       const food = response.data.dishRecommendation;
       setdishName(food);
+
+      // Tracking events
       // @ts-ignore
-      window.heap.track("searchFoodResponse", { searchValues: values, food });
+      window?.heap?.track("searchFoodResponse", { searchValues: values, food });
       ReactGA.event({
         category: "Food",
         action: "response",
@@ -154,67 +141,73 @@ const Form: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [
+    cuisine,
+    cookingTime,
+    mealType,
+    dietaryRestriction,
+    flavorProfile,
+    allergy,
+    protein,
+    carbohydrate,
+    fat,
+    dietType,
+    availableIngredients,
+    advancedFiltersExpanded,
+  ]);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setdishName("");
     setrecipe("");
     setshowDishContainer(false);
     setshowRecipeContainer(false);
     setIsLoading(false);
     setIsRecipeLoading(false);
-  };
+  }, []);
 
   const handleFormSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     reset();
     setshowDishContainer(true);
-    event.preventDefault();
-    // @ts-ignore
-    window.heap.track("searchFoodSubmit");
+    //@ts-ignore
+    window?.heap?.track("searchFoodSubmit");
     ReactGA.event({
       category: "Form",
       action: "Submit",
       label: "Search Dish",
     });
-    try {
-      await getDish();
-    } catch (error) {
-      console.error("API error:", error);
-    }
+    await getDish();
   };
 
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search);
-    // @ts-ignore
-    window.heap.track("viewPage", { location: window.location.pathname });
+    //@ts-ignore
+    window?.heap?.track("viewPage", { location: window.location.pathname });
 
-    // Call the API with the assigned random values
-    (async () => {
-      try {
-        await getDish();
-      } catch (error) {
-        console.error("API error:", error);
-      }
-    })();
-  }, []);
+    // Initial API call
+    getDish().catch((error) => console.error("API error:", error));
+  }, [getDish]);
 
   const handleDietTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     reset();
-    // @ts-ignore
-    window.heap.track("changeDietType", { dietType: event.target.value });
+    const value = event.target.value;
+
+    //@ts-ignore
+    window?.heap?.track("changeDietType", { dietType: value });
     ReactGA.event({
       category: "Input",
       action: "change",
       label: "Diet Type",
-      dimension1: event.target.value,
+      dimension1: value,
     });
-    setDietType(event.target.value);
+    setDietType(value);
   };
 
   const handleDislike = async () => {
     reset();
-    // @ts-ignore
-    window.heap.track("changeFood", { food: dishName });
+
+    //@ts-ignore
+    window?.heap?.track("changeFood", { food: dishName });
     ReactGA.event({
       category: "Food",
       action: "dislike",
@@ -224,8 +217,8 @@ const Form: React.FC = () => {
   };
 
   const handleRecipeSearch = () => {
-    // @ts-ignore
-    window.heap.track("searchFoodRecipe", { food: dishName });
+    //@ts-ignore
+    window?.heap?.track("searchFoodRecipe", { food: dishName });
     ReactGA.event({
       category: "Food",
       action: "search",
@@ -239,10 +232,14 @@ const Form: React.FC = () => {
   const searchRecipe = async () => {
     setshowRecipeContainer(true);
     setIsRecipeLoading(true);
-    const recipeResponse = await getRecipe(dishName);
-    // const recipeResponse = `## Chicken Biryani Recipe\n\n### Ingredients:\n- 2 cups basmati rice\n- 1 lb chicken, cut into small pieces\n- 1 large onion, sliced\n- 2 tomatoes, chopped\n- 1/2 cup plain yogurt\n- 2 tbsp ginger-garlic paste\n- 1 tsp cumin powder\n- 1 tsp coriander powder\n- 1 tsp garam masala powder\n- 1/2 tsp turmeric powder\n- 1/2 tsp red chili powder\n- 2 bay leaves\n- 4 cloves\n- 4 green cardamom pods\n- 1 cinnamon stick\n- 1/4 cup vegetable oil\n- Salt to taste\n- 4 cups water\n\n### Instructions:\n\n1. Rinse the rice in cold water until the water runs clear. Soak the rice in cold water for 30 minutes.\n2. Heat the oil in a large pot over medium heat. Add the bay leaves, cloves, cardamom pods, and cinnamon stick. Fry for 1-2 minutes until fragrant.\n3. Add the sliced onions and fry until golden brown.\n4. Add the chicken pieces and fry until browned on all sides.\n5. Add the chopped tomatoes, ginger-garlic paste, cumin powder, coriander powder, garam masala powder, turmeric powder, red chili powder, and salt. Mix well and cook for 5-7 minutes until the tomatoes are soft and the chicken is cooked through.\n6. Add the plain yogurt and mix well. Cook for another 2-3 minutes.\n7. Drain the soaked rice and add it to the pot. Mix well.\n8. Add 4 cups of water and bring to a boil.\n9. Reduce the heat to low, cover the pot, and simmer for 15-20 minutes until the rice is cooked and the water has been absorbed.\n10. Turn off the heat and let the biryani rest for 5-10 minutes.\n11. Fluff the rice with a fork and serve hot.\n\nEnjoy your delicious chicken biryani!`;
-    setrecipe(recipeResponse.data);
-    setIsRecipeLoading(false);
+    try {
+      const recipeResponse = await getRecipe(dishName);
+      setrecipe(recipeResponse.data);
+    } catch (error) {
+      console.error("API error:", error);
+    } finally {
+      setIsRecipeLoading(false);
+    }
   };
 
   return (
@@ -269,7 +266,6 @@ const Form: React.FC = () => {
           <Autocomplete
             options={popularCuisines}
             onChange={(event, value) => {
-              reset();
               reset();
               // @ts-ignore
               window.heap.track("changeCuisine", { cuisine: value });
