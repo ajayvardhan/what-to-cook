@@ -45,7 +45,7 @@ export const postFormData = async ({
         availableIngredients: availableIngredients || "",
     };
 
-    return await axios.post(API_URL, body, { headers });
+    return await axios.post(`${API_URL}/recommend-dish`, body, { headers });
 };
 
 
