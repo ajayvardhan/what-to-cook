@@ -234,7 +234,7 @@ const Form: React.FC = () => {
     setIsRecipeLoading(true);
     try {
       const recipeResponse = await getRecipe(dishName);
-      setrecipe(recipeResponse.data);
+      setrecipe(recipeResponse.data.recipe);
     } catch (error) {
       console.error("API error:", error);
     } finally {
