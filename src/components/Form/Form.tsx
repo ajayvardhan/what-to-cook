@@ -139,7 +139,7 @@ const Form: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await postFormData(values);
-      const food = response.data;
+      const food = response.data.dishRecommendation;
       setdishName(food);
       // @ts-ignore
       window.heap.track("searchFoodResponse", { searchValues: values, food });
